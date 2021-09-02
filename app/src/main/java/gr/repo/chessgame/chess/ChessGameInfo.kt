@@ -1,4 +1,4 @@
-package gr.repo.chessgame
+package gr.repo.chessgame.chess
 
 object ChessGameInfo {
 

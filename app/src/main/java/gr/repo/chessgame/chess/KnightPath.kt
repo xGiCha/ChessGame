@@ -6,8 +6,7 @@ object KnightPath {
     private val chessboard = Array(8) { arrayOfNulls<Pos>(8) }
     private var q: Stack<Pos> = Stack()
 
-    var hashMap : HashMap<Int, Point>
-            = HashMap<Int, Point> ()
+    var hashMap: HashMap<Int, Point> = HashMap<Int, Point>()
 
 
     fun pathPoints(startX: Int, startY: Int, endX: Int, endY: Int): HashMap<Int, Point> {
@@ -33,8 +32,8 @@ object KnightPath {
             //If this position is same as the end position, you found the destination
             if (end.equals(pos!!) && pos.depth <= 3) {
                 val random = Random()
-//                println(String.format("#%06x", random.nextInt(256 * 256 * 256)))
                 var color = String.format("#%06x", random.nextInt(256 * 256 * 256))
+
                 // We found the Position. Now trace back from this position to get the actual shortest path
                 val path: Iterable<Pos?> = getShortestPath(start, end)
                 println("Minimum jumps required: " + pos.depth)
@@ -43,11 +42,10 @@ object KnightPath {
 
                 for (value in path.iterator()) {
                     println("(" + value?.x + " " + value?.y + ")")
-                    if(value?.x != startX || value.y != startY) {
-                            hashMap[index] = Point(value?.x!!, value.y, color)
-                            index++
+                    if (value?.x != startX || value.y != startY) {
+                        hashMap[index] = Point(value?.x!!, value.y, color)
+                        index++
                     }
-//                    println("aaaaaaahashMap : " + hashMap.values.size + "\n")
                 }
             } else {
                 // perform BFS on this Pos if it is not already visited
@@ -90,7 +88,7 @@ object KnightPath {
     }
 
     /*Check if this is a valid jump or position for Knight based on its current location */
-    fun isValid(current: Pos, next: Pos): Boolean {
+    private fun isValid(current: Pos, next: Pos): Boolean {
         // Use Pythagoras theorem to ensure that a move makes a right-angled triangle with sides of 1 and 2. 1-squared + 2-squared is 5.
         val deltaR = next.x - current.x
         val deltaC = next.y - current.y
@@ -122,10 +120,6 @@ object KnightPath {
 class Pos(var x: Int, var y: Int, var depth: Int) {
     fun equals(that: Pos): Boolean {
         return x == that.x && y == that.y
-    }
-
-    override fun toString(): String {
-        return "(" + x + " " + y + " " + depth + ")"
     }
 }
 

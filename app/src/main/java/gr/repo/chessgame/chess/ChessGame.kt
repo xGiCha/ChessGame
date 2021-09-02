@@ -1,8 +1,7 @@
-package gr.repo.chessgame
+package gr.repo.chessgame.chess
 
-import com.goldenthumb.android.chess.ChessPiece
-import com.goldenthumb.android.chess.Square
-import kotlin.math.abs
+import gr.repo.chessgame.data.ChessPiece
+import gr.repo.chessgame.data.Square
 
 object ChessGame {
     private var piecesBox = mutableSetOf<ChessPiece>()

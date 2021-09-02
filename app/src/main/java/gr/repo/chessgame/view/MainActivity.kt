@@ -1,11 +1,13 @@
-package gr.repo.chessgame
+package gr.repo.chessgame.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.goldenthumb.android.chess.ChessPiece
-import com.goldenthumb.android.chess.Square
-import java.util.concurrent.Executors
+import gr.repo.chessgame.chess.ChessDelegate
+import gr.repo.chessgame.chess.ChessGame
+import gr.repo.chessgame.R
+import gr.repo.chessgame.data.ChessPiece
+import gr.repo.chessgame.data.Square
 
 class MainActivity : AppCompatActivity(), ChessDelegate {
 
@@ -16,8 +18,8 @@ class MainActivity : AppCompatActivity(), ChessDelegate {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        resetButton = findViewById<Button>(R.id.reset_button)
-        chessView = findViewById<ChessView>(R.id.chess_view)
+        resetButton = findViewById(R.id.reset_button)
+        chessView = findViewById(R.id.chess_view)
         chessView.chessDelegate = this
 
         resetButton.setOnClickListener {
