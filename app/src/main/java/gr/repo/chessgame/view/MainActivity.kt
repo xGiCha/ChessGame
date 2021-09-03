@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), ChessDelegate {
         }
 
         chessView.callbackListAdapter = {
+            recyclerView.visibility = View.VISIBLE
             adapterMove.updateItems(KnightPath.listForAdapter.asReversed())
         }
 
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity(), ChessDelegate {
     }
 
     private fun resetView(){
+        recyclerView.visibility = View.GONE
         adapterMove.updateItems(mutableListOf())
         chessView.resetPoints()
         ChessGame.reset()
