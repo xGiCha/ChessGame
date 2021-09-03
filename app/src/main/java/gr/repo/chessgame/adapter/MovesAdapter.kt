@@ -1,5 +1,6 @@
 package gr.repo.chessgame.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,7 @@ class MovesAdapter(
                     if(moveList[position + 1] == "**"){
                         view.text = ""
                     }else {
-                        view.text = "$item -> ${moveList[position + 1]}"
+                        view.text = String.format("$item -> ${moveList[position + 1]}")
                     }
                 }else{
                     view.text = ""

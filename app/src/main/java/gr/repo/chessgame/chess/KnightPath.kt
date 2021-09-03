@@ -8,7 +8,7 @@ object KnightPath {
     private var q: Stack<Pos> = Stack()
 
     var hashMap: HashMap<Int, Point> = HashMap<Int, Point>()
-    var listForAdapter = mutableListOf<String>()
+    var listForAdapter = mutableListOf<String>() // list for Adapter and with the algebraic chess notations
 
     fun pathPoints(startX: Int, startY: Int, endX: Int, endY: Int): HashMap<Int, Point> {
         hashMap.clear()
@@ -34,14 +34,15 @@ object KnightPath {
             //If this position is same as the end position, you found the destination
             if (end.equals(pos!!) && pos.depth == 3) {
                 val random = Random()
-                var color = String.format("#%06x", random.nextInt(256 * 256 * 256)) // choose random color
+                val color = String.format("#%06x", random.nextInt(256 * 256 * 256)) // choose random color
 
                 // We found the Position. Now trace back from this position to get the actual shortest path
                 val path: Iterable<Pos?> = getShortestPath(start, end)
                 println("Minimum jumps required: " + pos.depth)
                 println("Actual Path")
                 println("(" + pos.x + " " + pos.y + ")")
-                listForAdapter.add("${ChessGameInfo.colTable[pos.x]}${pos.y + 1}")
+
+                listForAdapter.add("${ChessGameInfo.colTable[pos.x]}${pos.y + 1}") // target point with the algebraic chess notations
 
                 for (value in path.iterator()) {
                     println("(" + value?.x + " " + value?.y + ")")
@@ -49,9 +50,9 @@ object KnightPath {
                         hashMap[index] = Point(value?.x!!, value.y, color)
                         index++
                     }
-                    listForAdapter.add("${ChessGameInfo.colTable[value.x]}${value.y + 1}")
+                    listForAdapter.add("${ChessGameInfo.colTable[value.x]}${value.y + 1}") // rest of the points with the algebraic chess notations
                 }
-                listForAdapter.add("**")
+                listForAdapter.add("**") // separator between different paths of the same start and target point
             } else {
                 // perform BFS on this Pos if it is not already visited
                 bfs(pos, ++pos.depth)
@@ -59,7 +60,6 @@ object KnightPath {
         }
         //This code is reached when the queue is empty and we still did not find the location.
         println("End position is not reachable for the knight")
-        println("aaaaaaaaaa44444 ${listForAdapter}")
         return hashMap
     }
 
@@ -89,7 +89,7 @@ object KnightPath {
     }
 
     private fun inRange(x: Int, y: Int): Boolean {
-        return 0 <= x && x < 8 && 0 <= y && y < 8
+        return x in 0..7 && 0 <= y && y < 8
     }
 
     /*Check if this is a valid jump or position for Knight based on its current location */
@@ -103,7 +103,7 @@ object KnightPath {
     /*Populate initial chessboard values*/
     private fun populateChessBoard() {
         for (i in chessboard.indices) {
-            for (j in 0 until chessboard[0].size) {
+            for (j in chessboard[0].indices) {
                 chessboard[i][j] = Pos(Int.MAX_VALUE, Int.MAX_VALUE, Int.MAX_VALUE)
             }
         }

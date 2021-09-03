@@ -10,7 +10,7 @@ object ChessGame {
         reset()
     }
 
-    fun clear() {
+    private fun clear() {
         piecesBox.clear()
     }
 

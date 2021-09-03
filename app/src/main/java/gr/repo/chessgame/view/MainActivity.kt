@@ -39,10 +39,12 @@ class MainActivity : AppCompatActivity(), ChessDelegate {
 
         chessView.chessDelegate = this
 
+        // callback for error message
         chessView.callbackMessage = {
             buildErrorMsg()
         }
 
+        //callback for adapter
         chessView.callbackListAdapter = {
             recyclerView.visibility = View.VISIBLE
             adapterMove.updateItems(KnightPath.listForAdapter.asReversed())
