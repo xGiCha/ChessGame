@@ -1,5 +1,6 @@
 package gr.repo.chessgame
 
+import gr.repo.chessgame.chess.ChessGameInfo
 import java.util.*
 
 object KnightPath {
@@ -7,10 +8,11 @@ object KnightPath {
     private var q: Stack<Pos> = Stack()
 
     var hashMap: HashMap<Int, Point> = HashMap<Int, Point>()
-
+    var listForAdapter = mutableListOf<String>()
 
     fun pathPoints(startX: Int, startY: Int, endX: Int, endY: Int): HashMap<Int, Point> {
         hashMap.clear()
+        listForAdapter.clear()
         var index = 0
 
         //Populate the chessboard with position values as unreachable
@@ -30,15 +32,16 @@ object KnightPath {
             val pos = q.pop() //read and remove element from the queue
 
             //If this position is same as the end position, you found the destination
-            if (end.equals(pos!!) && pos.depth <= 3) {
+            if (end.equals(pos!!) && pos.depth == 3) {
                 val random = Random()
-                var color = String.format("#%06x", random.nextInt(256 * 256 * 256))
+                var color = String.format("#%06x", random.nextInt(256 * 256 * 256)) // choose random color
 
                 // We found the Position. Now trace back from this position to get the actual shortest path
                 val path: Iterable<Pos?> = getShortestPath(start, end)
                 println("Minimum jumps required: " + pos.depth)
                 println("Actual Path")
                 println("(" + pos.x + " " + pos.y + ")")
+                listForAdapter.add("${ChessGameInfo.colTable[pos.x]}${pos.y + 1}")
 
                 for (value in path.iterator()) {
                     println("(" + value?.x + " " + value?.y + ")")
@@ -46,15 +49,17 @@ object KnightPath {
                         hashMap[index] = Point(value?.x!!, value.y, color)
                         index++
                     }
+                    listForAdapter.add("${ChessGameInfo.colTable[value.x]}${value.y + 1}")
                 }
+                listForAdapter.add("**")
             } else {
                 // perform BFS on this Pos if it is not already visited
                 bfs(pos, ++pos.depth)
             }
         }
-
         //This code is reached when the queue is empty and we still did not find the location.
         println("End position is not reachable for the knight")
+        println("aaaaaaaaaa44444 ${listForAdapter}")
         return hashMap
     }
 

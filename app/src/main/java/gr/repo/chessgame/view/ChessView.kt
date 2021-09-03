@@ -12,7 +12,6 @@ import gr.repo.chessgame.chess.ChessDelegate
 import gr.repo.chessgame.chess.ChessGame
 import gr.repo.chessgame.data.ChessPiece
 import gr.repo.chessgame.data.Chessman
-import gr.repo.chessgame.data.Player
 import gr.repo.chessgame.data.Square
 import java.util.HashMap
 import kotlin.math.min
@@ -37,9 +36,9 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     private var startingPointChessPiecePositionX = 0
     private var startingPointChessPiecePositionY = 0
     private lateinit var canvas: Canvas
-    private var mCol = -1
-    private var mRow = -1
-    var hashMap: HashMap<Int, Point> = HashMap<Int, Point>()
+    private var hashMap: HashMap<Int, Point> = HashMap<Int, Point>()
+    lateinit var callbackMessage: () -> Unit
+    lateinit var callbackListAdapter: () -> Unit
 
     var chessDelegate: ChessDelegate? = null
 
@@ -72,13 +71,22 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
         val col = ((event.x - originX) / cellSide).toInt()
         val row = 7 - ((event.y - originY) / cellSide).toInt()
 
-        if (endingPointChessPieceIsCreated && (startingPointChessPiecePositionX != col || startingPointChessPiecePositionY != row)) {
-            ChessGame.addPiece(ChessPiece(col, row, Player.WHITE, Chessman.KNIGHT, R.drawable.knight_black))
+        if (endingPointChessPieceIsCreated
+                && (startingPointChessPiecePositionX != col
+                        || startingPointChessPiecePositionY != row)) { // placing the second knight
+
+            ChessGame.addPiece(ChessPiece(col, row, Chessman.KNIGHT, R.drawable.knight_black))
             endingPointChessPieceIsCreated = false
             hashMap = KnightPath.pathPoints(startingPointChessPiecePositionX, startingPointChessPiecePositionY, col, row)
+
+            if (hashMap.size == 0) {
+                callbackMessage.invoke() // callback for error message
+            } else {
+                callbackListAdapter.invoke() // callback for adapter
+            }
         }
-        if (!startingPointChessPieceIsCreated) {
-            ChessGame.addPiece(ChessPiece(col, row, Player.WHITE, Chessman.KNIGHT, R.drawable.knight_white))
+        if (!startingPointChessPieceIsCreated) { // placing the first knight
+            ChessGame.addPiece(ChessPiece(col, row, Chessman.KNIGHT, R.drawable.knight_white))
             startingPointChessPieceIsCreated = true
             endingPointChessPieceIsCreated = true
             startingPointChessPiecePositionX = col
@@ -95,7 +103,6 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
                 chessDelegate?.pieceAt(Square(col, row))?.let { piece ->
                     drawPieceAt(canvas, col, row, piece.resID)
                 }
-
     }
 
     private fun drawPieceAt(canvas: Canvas, col: Int, row: Int, resID: Int) =
@@ -120,10 +127,10 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     private fun drawSquare(canvas: Canvas) {
 
         for (key in hashMap.entries) {
-            mCol = key.value.x
-            mRow = key.value.y
-//            paint.color = Color.parseColor(key.value.color)
-            paint.color = orange
+            val mCol = key.value.x
+            val mRow = key.value.y
+            paint.color = Color.parseColor(key.value.color)
+//            paint.color = orange
             canvas.drawRect(mCol * cellSide + originX, 7 * cellSide - mRow * cellSide - originY, (mCol + 1) * cellSide + originX, 7 * cellSide - (mRow - 1) * cellSide - originY, paint)
 
         }
@@ -135,8 +142,6 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     fun resetPoints() {
-        mCol = -1
-        mRow = -1
         hashMap = HashMap<Int, Point>()
     }
 
